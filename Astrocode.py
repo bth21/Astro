@@ -5,3 +5,4 @@ Created on Fri Oct  6 10:23:23 2023
 
 @author: benhale
 """
+print("Github sucks")
