@@ -5,4 +5,7 @@ Created on Fri Oct  6 10:23:23 2023
 
 @author: benhale
 """
-print("Github sucks")
+
+from astropy.io import fits
+
+hdulist = fits.open("Desktop/Year 3 Lab/Astrophysics/Astro/Fits_data/mosaic.fits")
