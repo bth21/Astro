@@ -5,5 +5,7 @@ Created on Fri Oct  6 10:23:23 2023
 
 @author: benhale
 """
-print("getting gitty with it")
+from astropy.io import fits
+#ellasversion
+
 
