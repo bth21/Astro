@@ -1,5 +1,6 @@
 """This module plots the histogram of the pixel values"""
 
+#%%
 
 from astropy.io import fits
 import numpy as np

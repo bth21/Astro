@@ -1,5 +1,5 @@
 """This module carries out Connected Component Labelling (CCL)"""
-
+#%%
 from astropy.io import fits
 import numpy as np
 import matplotlib.pyplot as plt
