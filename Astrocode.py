@@ -14,6 +14,9 @@ hdulist = fits.open(r"C:\Users\Administrator\GitHub\Astro\mosaic.fits")
 hdulist[0].header
 data = hdulist[0].data
 
+# Close FITS file
+hdulist.close()
+
 
 
 
