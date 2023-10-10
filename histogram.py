@@ -10,11 +10,11 @@ import filterdata as fd
 
 
 # Specify the number of bins you want in your histogram
-num_bins = 350
+num_bins = 3500
 
 
 # Plot the histogram
-plt.hist(fd.filtered_data, bins=num_bins, density=False, alpha=0.75, color='blue')
+plt.hist(fd.filtered_data2, bins=num_bins, density=False, alpha=0.75, color='blue')
 
 # Add labels and a title
 plt.xlabel('Pixel Value')

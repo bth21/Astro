@@ -17,8 +17,15 @@ trimmed_image = ac.data[border_size:border_size + new_height, border_size:border
 # Create a mask to filter values 
 low_range = 3350
 high_range = 3600
-mask = (trimmed_image >= low_range) & (trimmed_image <= high_range) 
+mask1 = (trimmed_image >= low_range) & (trimmed_image <= high_range) 
 
 # Apply the mask to your data to exclude values 
-filtered_data = trimmed_image[mask]
-#print(filtered_data)
+filtered_data1 = trimmed_image[mask1]
+
+# Filter the data to select pixels > 2 std above mean
+std_filter = 3418.13 + (2*11.79)
+mask2 = trimmed_image >= std_filter
+filtered_data2 = trimmed_image[mask2]
+
+
+
