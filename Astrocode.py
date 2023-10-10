@@ -5,10 +5,11 @@ Created on Fri Oct  6 10:23:23 2023
 
 @author: benhale
 """
-import numpy as np
-import scipy as scipy
-import matplotlib.pyplot as plt
+#%%
 from astropy.io import fits
+import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 hdulist = fits.open("Fits_data/mosaic.fits")
@@ -76,4 +77,22 @@ plt.legend()
 # Show the plot
 plt.show()
 
+# %%
+'''Converting pixel data into binary data with 5stds above mean
+background value'''
+# Define the threshold value (3477 is 5std above mean)
+threshold = 3477
+
+
+# Apply the threshold
+binary_data = (trimmed_image > threshold).astype(np.uint8)
+
+# Close the FITS file
 hdulist.close()
+
+# Save the binary data to a binary file (e.g., a FITS file or a binary image)
+# Here, we save it as a new FITS file
+binary_image = fits.PrimaryHDU(binary_data)
+binary_image.writeto('binary_output.fits', overwrite=True)
+
+# %%
