@@ -9,7 +9,7 @@ import filterdata as fd
 
 
 
-# Specify the number of bins you want in your histogram
+# Specify the number of bins in histogram
 num_bins = 3500
 
 

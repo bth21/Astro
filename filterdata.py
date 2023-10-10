@@ -23,7 +23,7 @@ mask1 = (trimmed_image >= low_range) & (trimmed_image <= high_range)
 filtered_data1 = trimmed_image[mask1]
 
 # Filter the data to select pixels > 2 std above mean
-std_filter = 3418.13 + (5*11.79)
+std_filter = 3418.13 + (2*11.79)
 mask2 = trimmed_image >= std_filter
 filtered_data2 = trimmed_image[mask2]
 

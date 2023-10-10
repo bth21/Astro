@@ -15,6 +15,7 @@ binary_image = (ac.data > fd.std_filter).astype('uint8') * 255
 # Show the binary image
 cv2.imshow('Binary Image', binary_image)
 
-# Wait for a key press and then close the window
+# Close window
 cv2.waitKey(0)
 cv2.destroyAllWindows() 
+

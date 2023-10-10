@@ -3,7 +3,7 @@
 """
 Created on Fri Oct  6 10:23:23 2023
 
-@author: benhale
+@author: benhale & ellalitjens
 """
 from astropy.io import fits
 import numpy as np
