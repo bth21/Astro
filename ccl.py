@@ -12,6 +12,12 @@ import numpy as np
 # Apply binary thresholding
 binary_image = (ac.data > fd.std_filter).astype('uint8') * 255
 
+# Create a named window (with the WINDOW_NORMAL flag)
+cv2.namedWindow('Binary Image', cv2.WINDOW_NORMAL)
+
+# Set the window to be resizable
+cv2.setWindowProperty('Binary Image', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
+
 # Show the binary image
 cv2.imshow('Binary Image', binary_image)
 
