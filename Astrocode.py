@@ -22,26 +22,28 @@ new_height = data.shape[0] - 2 * border_size
 trimmed_image = data[border_size:border_size + new_height, border_size:border_size + new_width]
 
 # Assuming you have your data in the variable 'data'
-# Create a mask to filter values greater than or equal to 10,000
+# Create a mask to filter values 
 low_range = 3350
 high_range = 3600
 mask = (trimmed_image >= low_range) & (trimmed_image <= high_range) 
 
-# Apply the mask to your data to exclude values less than 10,000
+# Apply the mask to your data to exclude values 
 filtered_data = trimmed_image[mask]
 #print(filtered_data)
 
 
 # Specify the number of bins you want in your histogram
-num_bins = 50
+num_bins = 350
+
 
 # Plot the histogram
-plt.hist(filtered_data.flatten(), bins=num_bins, density=True, alpha=0.75, color='blue')
+plt.hist(filtered_data, bins=num_bins, density=False, alpha=0.75, color='blue')
 
 # Add labels and a title
 plt.xlabel('Pixel Value')
 plt.ylabel('Frequency')
-plt.title('Histogram (Values >= 10,000)')
+plt.title('Histogram of Pixel Values')
+
 
 # Show the plot
 plt.show()
