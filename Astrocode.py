@@ -11,6 +11,9 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy import ndimage
+from skimage.measure import label, regionprops
+
 
 hdulist = fits.open("Fits_data/mosaic.fits")
 hdulist[0].header
@@ -81,7 +84,7 @@ plt.show()
 '''Converting pixel data into binary data with 5stds above mean
 background value'''
 # Define the threshold value (3477 is 5std above mean)
-threshold = 3477
+threshold = 3442
 
 
 # Apply the threshold
@@ -94,5 +97,34 @@ hdulist.close()
 # Here, we save it as a new FITS file
 binary_image = fits.PrimaryHDU(binary_data)
 binary_image.writeto('binary_output.fits', overwrite=True)
+
+#%%
+
+labeled_data = label(binary_data)
+
+object_properties = regionprops(labeled_data)
+
+blooming_mask = np.zeros_like(binary_data, dtype=bool)
+
+threshold_area = 5000
+
+for prop in object_properties:
+    # Adjust the criteria as needed to identify blooming artifacts
+    if prop.area > threshold_area:
+        blooming_mask[labeled_data == prop.label] = True
+
+cleaned_data = binary_data.copy()
+cleaned_data[blooming_mask] = 0
+
+output_file = 'cleaned_image.fits'
+
+# Create a FITS header
+header = fits.Header()
+header['COMMENT'] = 'Cleaned image data'
+
+# Save the cleaned data to the FITS file
+fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
+
+
 
 # %%
