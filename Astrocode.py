@@ -14,12 +14,6 @@ hdulist = fits.open(r"C:\Users\Administrator\GitHub\Astro\mosaic.fits")
 hdulist[0].header
 data = hdulist[0].data
 
-# plot histogram
-num_bins = 10
-plt.hist(data.flatten(),num_bins)
-plt.xlabel("Value")
-plt.ylabel("Pixel Value")
-
 # cropping border pixels from edge of image
 border_size = 130   
 new_width = data.shape[1] - 2 * border_size
@@ -29,10 +23,14 @@ trimmed_image = data[border_size:border_size + new_height, border_size:border_si
 
 # Assuming you have your data in the variable 'data'
 # Create a mask to filter values greater than or equal to 10,000
-mask = trimmed_image <= 3700
+low_range = 3350
+high_range = 3600
+mask = (trimmed_image >= low_range) & (trimmed_image <= high_range) 
 
 # Apply the mask to your data to exclude values less than 10,000
 filtered_data = trimmed_image[mask]
+#print(filtered_data)
+
 
 # Specify the number of bins you want in your histogram
 num_bins = 50
@@ -47,3 +45,6 @@ plt.title('Histogram (Values >= 10,000)')
 
 # Show the plot
 plt.show()
+
+
+
