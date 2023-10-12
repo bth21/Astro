@@ -4,7 +4,7 @@ import numpy as np
 import Astrocode as ac
 from skimage.measure import label
 
-'''Converting pixel data into binary data with 5stds above mean
+'''Converting pixel data into binary data with 2stds above mean
 background value'''
 # Define the threshold value (3442 is 2std above mean)
 std = 2
@@ -22,3 +22,5 @@ ac.hdulist.close()
 binary_image = fits.PrimaryHDU(binary_data)
 binary_image.writeto('binary_output.fits', overwrite=True)
 
+
+# %%

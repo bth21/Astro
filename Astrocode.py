@@ -78,7 +78,7 @@ plt.legend()
 #plt.savefig('Astrohist_fit')
 
 # Show the plot
-plt.show()
+#plt.show()
 
 # %%
 '''Converting pixel data into binary data with 5stds above mean

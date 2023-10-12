@@ -4,6 +4,7 @@ import numpy as np
 from scipy import ndimage
 from skimage.measure import label, regionprops
 import Astrocode as ac
+import matplotlib.pyplot as plt
 
 
 labeled_data = label(ac.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
@@ -50,3 +51,16 @@ header['COMMENT'] = 'Restored image data'
 fits.writeto(output_file, restored_data, header=header, overwrite=True)
 
 
+
+# %%
+low_r = 3000  #defining mask parameters to plot histogram of pixel data
+high_r = 3800
+mask = (restored_data >= low_r) & (restored_data <= high_r)
+restored_data_hist = restored_data[mask]
+
+plt.hist(restored_data_hist, bins = 500)  #plotting histogram of pixel data for restored image
+plt.xlabel('Pixel Value')
+plt.ylabel('Frequency')
+#plt.savefig('Restored_hist')
+plt.show()
+# %%
