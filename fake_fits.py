@@ -1,5 +1,6 @@
 import numpy as np
 from astropy.io import fits
+import Astrocode as ac
 
 # Define the dimensions of your image (e.g., 100x100 pixels)
 image_shape = (100, 100)
@@ -48,4 +49,15 @@ fits_filename = 'test_image_2_circles_bloom.fits'
 
 # Write the FITS file
 hdu.writeto(fits_filename, overwrite=True)
+
+
+# cropping section of image
+top_lhs_x = 770
+top_lhs_y = 2360 
+width = 300
+height = 150
+
+trimmed_image = ac.data[top_lhs_y:top_lhs_y + height, top_lhs_x:top_lhs_x + width]
+
+#need to save this cropping now to create a new test image
 
