@@ -1,4 +1,4 @@
-#%%
+
 from astropy.io import fits
 import numpy as np
 from scipy import ndimage
@@ -7,7 +7,7 @@ import Astrocode as ac
 import matplotlib.pyplot as plt
 
 
-labeled_data = label(ac.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
+labeled_data = label(ac.binary_data, connectivity = 2) #assigns unique label to each connected group of pixels
 num_labels_binary = np.max(labeled_data) #number of objects in binary data
 print(num_labels_binary)
 object_properties = regionprops(labeled_data)
@@ -23,7 +23,7 @@ for prop in object_properties:
 
 cleaned_data = ac.binary_data.copy()
 cleaned_data[blooming_mask] = 0  #applies mask
-cleaned_data_label = label(cleaned_data, connectivity = 1)
+cleaned_data_label = label(cleaned_data, connectivity = 2)
 num_labels_clean = np.max(cleaned_data_label) #number of objects in cleaned data
 print(num_labels_clean)
 
@@ -41,7 +41,7 @@ ac.trimmed_image[ac.trimmed_image == 0] = 0 #replacing the background in the ori
 
 restored_data = ac.trimmed_image * cleaned_data #combining the original data with the cleaned data
 output_file = 'restored_image.fits'
-restored_data_label = label(restored_data, connectivity = 1)
+restored_data_label = label(restored_data, connectivity = 2)
 num_labels_restored = np.max(restored_data_label)
 print(num_labels_restored)
 
