@@ -1,27 +1,29 @@
-
+#%%
 from astropy.io import fits
 import numpy as np
 from scipy import ndimage
 from skimage.measure import label, regionprops
 import Astrocode as ac
 import matplotlib.pyplot as plt
+import binary as bn
+from skimage.morphology import binary_opening, square
 
 
-labeled_data = label(ac.binary_data, connectivity = 2) #assigns unique label to each connected group of pixels
+labeled_data = label(bn.binary_data, connectivity = 2) #assigns unique label to each connected group of pixels
 num_labels_binary = np.max(labeled_data) #number of objects in binary data
 print(num_labels_binary)
 object_properties = regionprops(labeled_data)
 
-blooming_mask = np.zeros_like(ac.binary_data, dtype=bool) #creates mask - array of zeros same shape as binary_data
+blooming_mask = np.zeros_like(bn.binary_data, dtype=bool) #creates mask - array of zeros same shape as binary_data
 
-threshold_area = 5000
+threshold_area = 1800
 
 for prop in object_properties:
     # Adjust the criteria as needed to identify blooming artifacts
     if prop.area > threshold_area:
         blooming_mask[labeled_data == prop.label] = True
 
-cleaned_data = ac.binary_data.copy()
+cleaned_data = bn.binary_data.copy()
 cleaned_data[blooming_mask] = 0  #applies mask
 cleaned_data_label = label(cleaned_data, connectivity = 2)
 num_labels_clean = np.max(cleaned_data_label) #number of objects in cleaned data
@@ -35,11 +37,37 @@ header['COMMENT'] = 'Cleaned image data'
 
 # Save the cleaned data to the FITS file
 fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
+#%%
+labeled_data1 = label(bn.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
+object_properties1 = regionprops(labeled_data1)
+# Define a minimum area for objects to keep
+min_area = 10  # Adjust this value based on your requirements
 
+# Create a binary mask based on the object area criteria
+mask = np.zeros_like(cleaned_data, dtype=bool)
+
+for region in object_properties1:
+    if region.area >= min_area:
+        # Set the pixels corresponding to the object in the mask to True
+        mask[labeled_data1 == region.label] = True
+
+# Apply the mask to your FITS image
+masked_image = cleaned_data.copy()
+masked_image[~mask] = 0  # Set pixels outside the mask to 0
+
+output_file = 'squeakyclean.fits'
+fits.writeto(output_file, masked_image, header=header, overwrite=True)
+#%%
+num_labels_clean_noise = np.max(labeled_data1) #number of objects in cleaned data
+print(num_labels_clean_noise)
+
+
+
+#%%
 
 ac.trimmed_image[ac.trimmed_image == 0] = 0 #replacing the background in the original image with zeros
 
-restored_data = ac.trimmed_image * cleaned_data #combining the original data with the cleaned data
+restored_data = ac.trimmed_image * masked_image #combining the original data with the cleaned data
 output_file = 'restored_image.fits'
 restored_data_label = label(restored_data, connectivity = 2)
 num_labels_restored = np.max(restored_data_label)
@@ -49,7 +77,6 @@ header['COMMENT'] = 'Restored image data'
 
 # Save the restored data to the FITS file
 fits.writeto(output_file, restored_data, header=header, overwrite=True)
-
 
 
 # %%
