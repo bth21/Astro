@@ -25,3 +25,15 @@ plt.title('Histogram of Pixel Values')
 
 # Show the plot
 plt.show()
+
+#low_r = 3000  #defining mask parameters to plot histogram of pixel data
+#high_r = 3800
+#mask = (restored_data >= low_r) & (restored_data <= high_r)
+#restored_data_hist = restored_data[mask]
+
+#plt.hist(restored_data_hist, bins = 500)  #plotting histogram of pixel data for restored image
+#plt.xlabel('Pixel Value')
+#plt.ylabel('Frequency')
+#plt.savefig('Restored_hist')
+#plt.show()
+# %%

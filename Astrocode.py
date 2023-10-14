@@ -41,6 +41,8 @@ mask = (trimmed_image >= low_range) & (trimmed_image <= high_range)
 # Apply the mask to your data to exclude values less than 3500 and greater than 3350
 filtered_data = trimmed_image[mask]
 
+num_bins = 100
+
 
 # Plot the histogram
 plt.hist(filtered_data.flatten(), bins = num_bins, alpha=0.75, color='blue')
@@ -80,6 +82,6 @@ plt.legend()
 #plt.savefig('Astrohist_fit')
 
 # Show the plot
-#plt.show()
+plt.show()
 
 
