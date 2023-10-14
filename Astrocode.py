@@ -81,3 +81,5 @@ plt.legend()
 #plt.show()
 
 
+
+# %%

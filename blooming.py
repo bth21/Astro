@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import binary as bn
 from skimage.morphology import binary_opening, square
 
+'''removing blooming pixels'''
 
 labeled_data = label(bn.binary_data, connectivity = 2) #assigns unique label to each connected group of pixels
 num_labels_binary = np.max(labeled_data) #number of objects in binary data
@@ -38,10 +39,12 @@ header['COMMENT'] = 'Cleaned image data'
 # Save the cleaned data to the FITS file
 fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
 #%%
+'''removing hot pixels and noise from very bright stars'''
+
 labeled_data1 = label(bn.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
 object_properties1 = regionprops(labeled_data1)
 # Define a minimum area for objects to keep
-min_area = 10  # Adjust this value based on your requirements
+min_area = 8  # Adjust this value based on your requirements
 
 # Create a binary mask based on the object area criteria
 mask = np.zeros_like(cleaned_data, dtype=bool)
@@ -52,22 +55,23 @@ for region in object_properties1:
         mask[labeled_data1 == region.label] = True
 
 # Apply the mask to your FITS image
-masked_image = cleaned_data.copy()
-masked_image[~mask] = 0  # Set pixels outside the mask to 0
+final_clean_data = cleaned_data.copy()
+final_clean_data[~mask] = 0  # Set pixels outside the mask to 0
 
 output_file = 'squeakyclean.fits'
-fits.writeto(output_file, masked_image, header=header, overwrite=True)
+fits.writeto(output_file, final_clean_data, header = header, overwrite=True)
 #%%
-num_labels_clean_noise = np.max(labeled_data1) #number of objects in cleaned data
+labels_clean_noise = label(final_clean_data, connectivity = 1)
+num_labels_clean_noise = np.max(labels_clean_noise) #number of objects in cleaned data
 print(num_labels_clean_noise)
 
 
 
 #%%
-
+'''combining clean binary data with original data to get pixel values'''
 ac.trimmed_image[ac.trimmed_image == 0] = 0 #replacing the background in the original image with zeros
 
-restored_data = ac.trimmed_image * masked_image #combining the original data with the cleaned data
+restored_data = ac.trimmed_image * final_clean_data #combining the original data with the cleaned data
 output_file = 'restored_image.fits'
 restored_data_label = label(restored_data, connectivity = 2)
 num_labels_restored = np.max(restored_data_label)
@@ -90,4 +94,5 @@ plt.xlabel('Pixel Value')
 plt.ylabel('Frequency')
 #plt.savefig('Restored_hist')
 plt.show()
+
 # %%
