@@ -33,6 +33,21 @@ output_file = 'with_background_image.fits'
 # Save the restored data to the FITS file
 fits.writeto(output_file, withbackground_data, header=header, overwrite=True)
 
+#%%
+"Cataloging data to ASCII file"
+
+
+# Define the file path for the existing ASCII file
+file_path = "galaxies_data.txt"
+
+# Open the file in append mode and write the new data
+with open(file_path, "a") as file:
+    # Write data for the new galaxy
+    file.write(f"{new_galaxy['name']}\t{new_galaxy['type']}\t{new_galaxy['magnitude']}\n")
+
+
+
+
 
 
 #%%
@@ -77,7 +92,6 @@ for region in regionprops(labeled_image):
     # Store the galaxy information in the list
     galaxies_info.append({'Galaxy': region.label, 'NetCounts': net_counts}) #gives pixel value for each galaxy minus the background
  
-    # Store or process the net counts for this galaxy
 
 # Count the detected galaxies
 number_of_galaxies = len(regionprops(labeled_image))
@@ -100,4 +114,4 @@ for i in net_counts_list:
 
 
 
-# %%
+

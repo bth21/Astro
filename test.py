@@ -41,6 +41,3 @@ header['COMMENT'] = 'test image data'
 
 # Save the cleaned data to the FITS file
 fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
-
-
-# %%
