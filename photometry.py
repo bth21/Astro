@@ -11,6 +11,18 @@ import binary as bn
 import blooming as bl
 from skimage import measure
 
+#%%
+"Defining a function to calculate the brightness from the net counts"
+hdul = fits.open("Fits_data/mosaic.fits")
+header = hdul[0].header
+magzpt_value = header['MAGZPT']
+
+def mag(c, z):
+    m = z - 2.5 * np.log10(c)
+    return m
+
+#%%
+
 '''Converting pixel data into binary data with 2stds above mean
 background value to regain only the background'''
 # Define the threshold value (3442 is 2std above mean)
