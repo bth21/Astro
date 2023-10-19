@@ -7,7 +7,7 @@ from skimage.measure import label
 '''Converting pixel data into binary data with 2stds above mean
 background value'''
 # Define the threshold value (3442 is 2std above mean)
-std = 2
+std = 5
 threshold = 3418.13 + std * 11.79
 
 # Apply the threshold

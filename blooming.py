@@ -44,7 +44,7 @@ fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
 labeled_data1 = label(bn.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
 object_properties1 = regionprops(labeled_data1)
 # Define a minimum area for objects to keep
-min_area = 8  # Adjust this value based on your requirements
+min_area = 10  # Adjust this value based on your requirements
 
 # Create a binary mask based on the object area criteria
 mask = np.zeros_like(cleaned_data, dtype=bool)
