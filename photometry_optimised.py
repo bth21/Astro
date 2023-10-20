@@ -50,7 +50,7 @@ import numpy as np
 from skimage import measure
 
 # Object detection using label
-labeled_image = measure.label(bl.final_clean_data, connectivity=2)
+labeled_image = measure.label(bl.final_clean_data, connectivity=1)
 
 # Initialize a list to store the net counts for each galaxy
 galaxies_info = []
@@ -100,7 +100,7 @@ for region in measure.regionprops(labeled_image):
 "Cataloguing data in an ASCII file"
 
 # Specify the file path where you want to save the ASCII file
-file_path = "galaxies_info.csv"
+file_path = "galaxies_info_connect1.csv"
 
 # Define the fieldnames (column headers) for your CSV file
 fieldnames = ['Galaxy', 'NetCounts', 'Brightness', 'Area', 'Coordinates', 'Eccentricity']
