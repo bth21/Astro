@@ -3,3 +3,7 @@ venv/
 env/
 .venv/
 .env/
+
+# Ass Virtual Environment
+
+ass/

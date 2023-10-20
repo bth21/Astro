@@ -11,6 +11,7 @@ import blooming as bl
 from skimage import measure
 import math
 import photometry as pt
+import cv2
 # %%
 '''attempt to separate joined galaxies'''
 
@@ -49,3 +50,21 @@ fits.writeto("twogalax_data.fits", sep_data, overwrite=True)
 
 
 # %%
+'Separating the double galaxies'
+
+# Load your FITS image 
+image = np.load('twogalax_data.fits')
+
+# Find contours in the binary image
+contours, _ = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+# Extract component positions (center of mass)
+component_positions = []
+for contour in contours:
+    M = cv2.moments(contour)
+    if M["m00"] > 0:  # Ensure non-zero area
+        cx = int(M["m10"] / M["m00"])
+        cy = int(M["m01"] / M["m00"])
+        component_positions.append((cx, cy))
+
+# Now component_positions contains the (x, y)
