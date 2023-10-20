@@ -28,7 +28,7 @@ cleaned_data = bn.binary_data.copy()
 cleaned_data[blooming_mask] = 0  #applies mask
 cleaned_data_label = label(cleaned_data, connectivity = 2)
 num_labels_clean = np.max(cleaned_data_label) #number of objects in cleaned data
-print(num_labels_clean)
+print(num_labels_clean)  #removing blooming
 
 output_file = 'cleaned_image.fits'
 
@@ -44,7 +44,7 @@ fits.writeto(output_file, cleaned_data, header=header, overwrite=True)
 labeled_data1 = label(bn.binary_data, connectivity = 1) #assigns unique label to each connected group of pixels
 object_properties1 = regionprops(labeled_data1)
 # Define a minimum area for objects to keep
-min_area = 8  # Adjust this value based on your requirements
+min_area = 10  # Adjust this value based on your requirements
 
 # Create a binary mask based on the object area criteria
 mask = np.zeros_like(cleaned_data, dtype=bool)
@@ -60,10 +60,10 @@ final_clean_data[~mask] = 0  # Set pixels outside the mask to 0
 
 output_file = 'squeakyclean.fits'
 fits.writeto(output_file, final_clean_data, header = header, overwrite=True)
-#%%
+
 labels_clean_noise = label(final_clean_data, connectivity = 1)
 num_labels_clean_noise = np.max(labels_clean_noise) #number of objects in cleaned data
-print(num_labels_clean_noise)
+print(num_labels_clean_noise) #number of objects after removing lone pixels and blooming
 
 
 
@@ -75,7 +75,7 @@ restored_data = ac.trimmed_image * final_clean_data #combining the original data
 output_file = 'restored_image.fits'
 restored_data_label = label(restored_data, connectivity = 2)
 num_labels_restored = np.max(restored_data_label)
-print(num_labels_restored)
+print(num_labels_restored) #number of objects with background reintroduced
 
 header['COMMENT'] = 'Restored image data'
 

@@ -10,16 +10,7 @@ import matplotlib.pyplot as plt
 import binary as bn
 import blooming as bl
 from skimage import measure
-
-#%%
-"Defining a function to calculate the brightness from the net counts"
-hdul = fits.open("Fits_data/mosaic.fits")
-header = hdul[0].header
-magzpt_value = header['MAGZPT']
-
-def mag(c, z):
-    m = z - 2.5 * np.log10(c)
-    return m
+import math
 
 #%%
 
@@ -47,70 +38,7 @@ output_file = 'with_background_image.fits'
 fits.writeto(output_file, withbackground_data, header=header, overwrite=True)
 
 #%%
-"Cataloging data to ASCII file"
-
-
-# Define the file path for the existing ASCII file
-file_path = "galaxies_data.txt"
-
-# Open the file in append mode and write the new data
-with open(file_path, "a") as file:
-    # Write data for the new galaxy
-    file.write(f"{new_galaxy['name']}\t{new_galaxy['type']}\t{new_galaxy['magnitude']}\n")
-
-
-
-
-
-
-#%%
-# Object detection using label (you may use a more sophisticated method)
-labeled_image = label(bl.final_clean_data, connectivity=2)
-
-# List to store galaxy information (brightness)
-galaxies_info = []
-
-# Define aperture and annulus parameters
-galaxy_aperture_radius = 6  # Adjust the radius as needed
-background_inner_radius = 10
-background_outer_radius = 12
-
-# Iterate through labeled objects (galaxies)
-for region in regionprops(labeled_image):
-    # Extract the object's coordinates or centroid
-    object_coords = region.coords
-    object_centroid = region.centroid
-
-   # Define aperture mask around the object (a circular aperture, for example)
-    y, x = np.indices(withbackground_data.shape)
-    aperture_mask = (
-        (x - object_centroid[1])**2 + (y - object_centroid[0])**2 <= galaxy_aperture_radius**2)
-
-    # Define annulus mask around the object (an annular region, for example)
-    annulus_mask = (
-        (x - object_centroid[1])**2 + (y - object_centroid[0])**2 >= background_inner_radius**2) & (
-        (x - object_centroid[1])**2 + (y - object_centroid[0])**2 <= background_outer_radius**2)
-
-
-    # Calculate the background level within the annulus
-    background_counts = np.sum(withbackground_data * annulus_mask)  # Total counts in annulus
-    background_area = np.sum(annulus_mask)  # Number of pixels in annulus
-    background_per_pixel = background_counts / background_area
-
-    # Calculate the net counts for the galaxy
-    galaxy_counts = np.sum(withbackground_data * aperture_mask)  # Total counts in aperture
-    galaxy_area = np.sum(aperture_mask)  # Number of pixels in aperture
-    net_counts = galaxy_counts - (background_per_pixel * galaxy_area)
-
-    # Store the galaxy information in the list
-    galaxies_info.append({'Galaxy': region.label, 'NetCounts': net_counts}) #gives pixel value for each galaxy minus the background
- 
-
-# Count the detected galaxies
-number_of_galaxies = len(regionprops(labeled_image))
-
-#%%
-# Object detection using label (you may use a more sophisticated method)
+# Object detection using label
 labeled_image = measure.label(bl.final_clean_data, connectivity=2)
 
 # Initialize a list to store the net counts for each galaxy
@@ -165,8 +93,6 @@ for region in measure.regionprops(labeled_image):
 # Count the detected galaxies
 number_of_galaxies = len(measure.regionprops(labeled_image))
 
-
-
 # %%
 
 hdul = fits.open("Fits_data/mosaic.fits")
@@ -183,10 +109,20 @@ calibrated_mag_list = []
 for i in net_counts_list:
     calibrated_mag_list.append(mag(i, magzpt_value))
 
-calibrated_mag = []
+cleaned_list = []
 for value in calibrated_mag_list:
-    if value == float:
-        calibrated_mag.append(calibrated_mag_list)
+    if not math.isnan(value):
+        cleaned_list.append(value)
+# %%
+mask = np.zeros_like(labeled_image)
 
+for galaxy_info in galaxies_info:
+    if galaxy_info["NetCounts"] >= 0:
+        # Set the pixels corresponding to the positive object to 1 in the mask
+        mask[labeled_image == galaxy_info["Galaxy"]] = 1
 
+# Apply the mask to your data to mask the positive objects
+masked_data = bl.final_clean_data.copy()
+masked_data[mask == 1] = 0  # Set positive object pixels to 0 or any desired value
 
+fits.writeto("masked_data.fits", masked_data, overwrite=True)

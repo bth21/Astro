@@ -177,7 +177,7 @@ import numpy as np
 from skimage import measure
 
 # Object detection using label (you may use a more sophisticated method)
-labeled_image = measure.label(test_trimmed_image, connectivity=2)
+labeled_image = measure.label(test_trimmed_image, connectivity=1)
 
 # Initialize a list to store the net counts for each galaxy
 net_counts_list = []
@@ -227,8 +227,6 @@ for region in measure.regionprops(labeled_image):
 # Count the detected galaxies
 number_of_galaxies = len(measure.regionprops(labeled_image))
 
-# Print or process the list of net counts
-for i, net_counts in enumerate(net_counts_list):
-    print(f'Galaxy {i + 1}: Net Counts = {net_counts}')
+
 
 # %%
