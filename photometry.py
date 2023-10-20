@@ -113,9 +113,6 @@ cleaned_list = []
 for value in calibrated_mag_list:
     if not math.isnan(value):
         cleaned_list.append(value)
-
-print(cleaned_list)
-
 # %%
 mask = np.zeros_like(labeled_image)
 
@@ -129,6 +126,3 @@ masked_data = bl.final_clean_data.copy()
 masked_data[mask == 1] = 0  # Set positive object pixels to 0 or any desired value
 
 fits.writeto("masked_data.fits", masked_data, overwrite=True)
-
-# Perform further analysis or save the masked data
-# %%
