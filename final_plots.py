@@ -96,12 +96,13 @@ log_counts = np.log10(cumulative_counts)  # Use np.log for natural logarithm
 
 # Plot log(N) vs magnitude
 plt.figure(figsize=(8, 6))
-plt.plot(sorted_brightness, log_counts, marker='o', linestyle='none')
-plt.
+plt.plot(sorted_brightness, log_counts, marker='.', linestyle='none', color = 'black', label = 'Experimental Data')
+plt.plot(x, y, linestyle = '--', color = 'gray', label = 'Theoretical Trend')
 plt.xlabel('Magnitude')
-plt.ylabel('log(N)')
+plt.ylabel('log(N(m))')
 plt.title('Cumulative Number of Sources vs. Magnitude')
 plt.grid(True)
+plt.legend()
 
 plt.show()
 
