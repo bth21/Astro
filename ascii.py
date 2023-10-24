@@ -50,12 +50,13 @@ for region in regionprops(pt.labeled_image):
     min_solidty = 0.8 # change to appropriate values
 
 
-    if brightness < min_brightness and solidity < min_solidty:
+    if solidity > max_solidity and eccentricity < min_eccentricity:
+        classification = 'star' #maybe put star at top of list??
+    elif brightness < min_brightness and solidity < min_solidty:
         classification = 'blue galaxy'
     elif brightness > min_brightness or solidity > min_solidty:
         classification = 'red galaxy'
-    elif solidity > max_solidity and eccentricity < min_eccentricity:
-        classification = 'star'
+
     else: 
         classification = 'N/A'
 
