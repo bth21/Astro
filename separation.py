@@ -11,7 +11,7 @@ import blooming as bl
 from skimage import measure
 import math
 import photometry as pt
-import cv2
+
 # %%
 '''attempt to separate joined galaxies'''
 
