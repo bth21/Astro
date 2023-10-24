@@ -14,11 +14,10 @@ import math
 
 #%%
 
-'''Converting pixel data into binary data with 2stds above mean
+'''Converting pixel data into binary data with 3stds above mean
 background value to regain only the background'''
 # Define the threshold value (3442 is 2std above mean)
-std = 2
-threshold = 3418.13 + std * 11.79
+threshold = 3418.13 + bn.std * 11.79
 
 # Apply the threshold
 antibinary_data = (ac.trimmed_image < threshold).astype(np.uint8)
@@ -105,15 +104,16 @@ def mag(c, z):
 
 net_counts_list = [galaxy['NetCounts'] for galaxy in galaxies_info]
 
-calibrated_mag_list = []
+calibrated_mag_list = []  #number of galaxies total including nans
 for i in net_counts_list:
     calibrated_mag_list.append(mag(i, magzpt_value))
 
-cleaned_list = []
+cleaned_list = []  #number of galaxies excluding nans
 for value in calibrated_mag_list:
     if not math.isnan(value):
         cleaned_list.append(value)
 # %%
+'''plots only nans on fits file'''
 mask = np.zeros_like(labeled_image)
 
 for galaxy_info in galaxies_info:

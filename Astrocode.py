@@ -29,8 +29,8 @@ new_height = data.shape[0] - 2 * border_size #removing pixels from top and botto
 trimmed_image = data[border_size:border_size + new_height, border_size:border_size + new_width]
 
 # Create a mask to filter values
-low_range = 3350
-high_range = 3500
+low_range = 3600
+high_range = 10000
 mask = (trimmed_image >= low_range) & (trimmed_image <= high_range)
 
 
@@ -39,14 +39,14 @@ filtered_data = trimmed_image[mask]
 
 # Specify the number of bins you want in your histogram
 num_bins = 50
-
+plt.grid()
 # Plot the histogram
-plt.hist(filtered_data.flatten(), bins = num_bins, alpha=0.75, color='blue')
+plt.hist(filtered_data.flatten(), bins = num_bins, alpha=0.75, color='black')
 
 # Add labels and a title
 plt.xlabel('Pixel Value')
 plt.ylabel('Frequency')
-plt.title('Histogram')
+plt.title('Histogram of Pixel Values')
 
 
 hist, bin_edges = np.histogram(filtered_data, bins = num_bins)  #finding peak value of the histogram with 1000 bins
@@ -68,17 +68,18 @@ fit_params, _ = curve_fit(gaussian, x_centres, y_centres, p0=initial_guess)
 
 amplitude_fit, mean_fit, stddev_fit = fit_params
 
-plt.scatter(x_centres, y_centres, label='Data', color='red')
+#plt.scatter(x_centres, y_centres, label='Data', color='red')
 plt.plot(x_centres, gaussian(x_centres, *fit_params), label='Fit', color='red')
 
 plt.xlabel('Pixel Value')
 plt.ylabel('Frequency')
+
 #plt.title('Fitting a Gaussian Curve to Data')
 plt.legend()
 #plt.savefig('Astrohist_fit')
 
 # Show the plot
-#plt.show()
+plt.show()
 
 
 

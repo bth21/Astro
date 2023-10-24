@@ -105,23 +105,3 @@ calibrated_mag_list_sep = []
 for i in corrected_sum_pixel_values:
     calibrated_mag_list_sep.append(pt.mag(i, pt.magzpt_value))
 
-# %%
-'Separating the double galaxies'
-
-# Load your FITS image 
-image = np.load('twogalax_data.fits')
-
-# Find contours in the binary image
-contours, _ = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-# Extract component positions (center of mass)
-component_positions = []
-for contour in contours:
-    M = cv2.moments(contour)
-    if M["m00"] > 0:  # Ensure non-zero area
-        cx = int(M["m10"] / M["m00"])
-        cy = int(M["m01"] / M["m00"])
-        component_positions.append((cx, cy))
-
-# Now component_positions contains the (x, y)
-# %%

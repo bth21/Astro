@@ -4,16 +4,23 @@ import photometry as pt
 import separation as sp
 import math
 from skimage.measure import label, regionprops
+import numpy as np
+from astropy.io import fits
 
+hdul = fits.open("Fits_data/mosaic.fits")
+header = hdul[0].header
+magzpt_error = header['MAGZRR']
 
-"Cataloguing primary data in an ASCII file"
-
+hdul = fits.open("Fits_data/mosaic.fits")
+header = hdul[0].header
+magzpt_value = header['MAGZPT']
+# Cataloguing primary data in an ASCII file
 
 cleaned_info_dict = {f'Galaxy{i+1}': value for i, value in enumerate(pt.cleaned_list)}
 
 # Create a list of dictionaries with the information you want
-# Create a list of dictionaries with the information you want
 object_data = []
+errors_pix = []
 
 for region in regionprops(pt.labeled_image):
     x, y = map(int, region.centroid)  # Get the x, y coordinates and convert to integers
@@ -25,21 +32,28 @@ for region in regionprops(pt.labeled_image):
         # If not available, use the original galaxies_info dictionary
         brightness = pt.galaxies_info[label - 1]['NetCounts']
 
+    pixel_values = [pt.withbackground_data[c[0], c[1]] for c in region.coords]  # Get the pixel values for the object
     total_pixel_count = len(region.coords)
+    total_pixel_values = np.sum(pixel_values)
+    pixel_std = np.std(pixel_values) * 100  # Calculate the standard deviation of pixel values
     eccentricity = region.eccentricity
     area = region.area
-
+    error = (pixel_std/total_pixel_values) * brightness
+   # print(pixel_std)
     object_data.append({
         'x_coord': y,
         'y_coord': x,
         'Brightness': brightness,
         'Total_Pixel_Count': total_pixel_count,
+        'Pixel_Std': pixel_std,  # Include the standard deviation in the data
         'Eccentricity': eccentricity,
-        'Area': area
+        'Area': area,
+        'Error': error
     })
 
 # Define the name of the output file
 output_file = 'object_catalog.csv'
+
 # Write the data to the output CSV file
 with open(output_file, 'w', newline='') as file:
     writer = csv.DictWriter(file, fieldnames=object_data[0].keys())
@@ -49,6 +63,8 @@ with open(output_file, 'w', newline='') as file:
 
     # Write data for each object
     writer.writerows(object_data)
+
+
 
 # %%
 '''catalouging secondary data into ASCII file'''
@@ -77,6 +93,7 @@ for region in regionprops(sp.sep_data_label):
         'Total_Pixel_Count': total_pixel_count,
         'Eccentricity': eccentricity,
         'Area': area
+        
     })
 
 # Define the name of the output file
