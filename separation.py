@@ -104,4 +104,3 @@ calibrated_mag_list_sep = []
 for i in corrected_sum_pixel_values:
     calibrated_mag_list_sep.append(pt.mag(i, pt.magzpt_value))
 
-# %%
