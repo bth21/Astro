@@ -124,3 +124,4 @@ for contour in contours:
         component_positions.append((cx, cy))
 
 # Now component_positions contains the (x, y)
+# %%

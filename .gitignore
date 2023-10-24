@@ -7,3 +7,8 @@ env/
 # Ass Virtual Environment
 
 ass/
+
+# Ass2 Virtual Environment
+
+ass2/
+.ass2/

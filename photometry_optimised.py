@@ -1,6 +1,5 @@
 import numpy as np
 from astropy.io import fits
-import numpy as np
 from scipy import ndimage
 from skimage.measure import label, regionprops
 import Astrocode as ac
@@ -8,6 +7,7 @@ import matplotlib.pyplot as plt
 import binary as bn
 import blooming as bl
 import csv
+import star_classification as sc
 
 #%%
 "Defining a function to calculate the brightness from the net counts"
@@ -61,6 +61,11 @@ threshold_value = 3418.13 + std * 11.79
 local_background_inner_radius = 12
 local_background_outer_radius = 15
 
+# Define star classification criteria
+min_area = 10
+max_solidity = 0.95
+min_fwhm = 2.0
+
 # Calculate a thresholded image within the aperture
 thresholded_data = np.where(withbackground_data >= threshold_value, withbackground_data, 0)
 
@@ -92,8 +97,10 @@ for region in measure.regionprops(labeled_image):
 
     brightness = mag(net_counts,magzpt_value)
 
+    classify = classify_objects_4ascii(bl.final_clean_data, min_area, max_solidity, min_fwhm)
+
     # Store the galaxy information in the list
-    galaxies_info.append({'Galaxy': region.label,'Coordinates': region.centroid, 'NetCounts': net_counts,'Brightness': brightness, 'Area': region.area , 'Eccentricity': region.eccentricity})
+    galaxies_info.append({'Galaxy': region.label,'Coordinates': region.centroid, 'NetCounts': net_counts,'Brightness': brightness, 'Area': region.area , 'Eccentricity': region.eccentricity, 'Class': classify})
 
     
 #%%

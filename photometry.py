@@ -126,3 +126,5 @@ masked_data = bl.final_clean_data.copy()
 masked_data[mask == 1] = 0  # Set positive object pixels to 0 or any desired value
 
 fits.writeto("masked_data.fits", masked_data, overwrite=True)
+
+# %%
