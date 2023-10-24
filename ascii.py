@@ -39,6 +39,31 @@ for region in regionprops(pt.labeled_image):
     eccentricity = region.eccentricity
     area = region.area
     error = (pixel_std/total_pixel_values) * brightness
+
+    ########### star and colour classification ############
+
+    solidity = region.solidity
+    max_solidity = 0.95
+    min_eccentricity = 0.4
+    classification = 'empty'
+    min_brightness = 20 # change to appropriate values
+    min_solidty = 0.8 # change to appropriate values
+
+    if solidity > max_solidity and eccentricity < min_eccentricity:
+        classification = 'star'
+    if brightness < min_brightness and solidity < min_solidty:
+        classification = 'blue galaxy'
+    elif brightness > min_brightness and solidity > min_solidty:
+        classification = 'red galaxy'
+    elif solidity > max_solidity and eccentricity < min_eccentricity:
+        classification = 'star'
+    else: 
+        classification = 'N/A'
+
+
+
+    #######################################################
+
    # print(pixel_std)
     object_data.append({
         'x_coord': y,
@@ -48,7 +73,8 @@ for region in regionprops(pt.labeled_image):
         'Pixel_Std': pixel_std,  # Include the standard deviation in the data
         'Eccentricity': eccentricity,
         'Area': area,
-        'Error': error
+        'Error': error,
+        'Classification': classification
     })
 
 # Define the name of the output file
